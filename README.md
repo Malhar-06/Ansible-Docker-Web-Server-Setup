@@ -9,13 +9,13 @@ Write an Ansible PlayBook that does the following operations in the managed node
 
 Step 1: Launch two Amazon Linux 2 instances, one for the master and the other for the slave.
 
-Step 2: Install Ansible version 2.9.23-1.amzn2.noarch.
+Step 2: Install Ansible version `2.9.23-1.amzn2.noarch`.
 
-Step 3: Install the Ansible Collection: ansible-galaxy collection install community-docker.
+Step 3: Install the Ansible Collection: `ansible-galaxy collection install community-docker`.
 
-Step 4: Create an ansible.cfg file for configuring Ansible in the Ansible folder.
+Step 4: Create a `conf_ansible.cfg` file for configuring Ansible in the Ansible folder.
 
-Step 5: Create an inventory file and add the IP address of the slave instance under the [dev] group.
+Step 5: Create an inventory file and add the IP address of the slave instance under the `[dev]` group.
 
 Step 6: Check the connectivity to the slave node using the following command:
         ```ansible dev -m ping```
