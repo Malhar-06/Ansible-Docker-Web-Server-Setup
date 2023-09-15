@@ -1,0 +1,54 @@
+---
+- name: Set Up and Execute Docker Container
+  hosts: dev  # Use the group name from your inventory file
+  remote_user: ec2-user  # SSH username for connecting to the EC2 instance
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Set up Docker on an Amazon Linux 2 instance
+      ansible.builtin.package:
+        name: docker
+        state: present
+
+    - name: Enable and initiate the Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull the Docker Hub httpd server image
+      community.docker.docker_image:
+        name: httpd:latest
+        source: pull
+
+    - name: Create /var/www/html directory
+      ansible.builtin.file:
+        path: /var/www/html
+        state: directory
+
+    - name: Create an file
+      ansible.builtin.copy:
+        content: "Hello Malhar"
+        dest: /var/www/html/index.html
+
+    - name: Delete the current container if it is present
+      community.docker.docker_container:
+        name: my_httpd_container
+        state: absent
+      ignore_errors: yes
+
+    - name: Execute the Docker container
+      community.docker.docker_container:
+        name: my_httpd_container
+        image: httpd:latest
+        ports:
+          - "8080:80"
+        volumes:
+          - /var/www/html:/usr/local/apache2/htmldocs/
+        state: started
+
+  handlers:
+    - name: Reload Apache
+      ansible.builtin.service:
+        name: httpd
+        state: reloaded
